@@ -1,4 +1,10 @@
-import {cart} from '../data/cart.js';
+import {cart, addToCart} from '../data/cart.js';
+/* another syntax for multiple import from the same file 
+import * as cartModule from '../data/cart.js';
+
+cartModule.cart
+cartModule.addToCart('id')
+*/
 import {products} from '../data/products.js'
 
 //First make a variable to saves all the products in the list. Make it an empty string first
@@ -62,36 +68,13 @@ products.forEach((product) => {
 
 });
 
-
 document.querySelector('.js-products-grid')
   .innerHTML = productsHTML;
 
-document.querySelectorAll('.js-add-to-cart')
-  .forEach((button) => {
-    button.addEventListener('click', () => {
-      const productId = button.dataset.productId;
-      let matchingItem;
-
-      cart.forEach((item) => {
-        // Check if the added product is already exist in a cart. we check item.productName because in
-        // item it also has quantity. Check console.log(item);
-        if(productId === item.productId){
-          matchingItem = item; // if match, store it into a variable called matchingItem. This variable is an object, as 'item' is an object
-        }
-      });
-
-      if(matchingItem){
-        matchingItem.quantity += 1;
-      } else{
-        cart.push({
-          productId: productId,
-          quantity: 1
-        });
-      }
-
-      let cartQuantity = 0;
-      cart.forEach((item) => {
-        cartQuantity += item.quantity;
+function updateCartQuantity(){
+  let cartQuantity = 0;
+      cart.forEach((cartItem) => {
+        cartQuantity += cartItem.quantity;
       });
 
       document.querySelector('.js-cart-quantity')
@@ -99,6 +82,14 @@ document.querySelectorAll('.js-add-to-cart')
 
       // console.log(cartQuantity);
       // console.log(cart);
+}
+
+document.querySelectorAll('.js-add-to-cart')
+  .forEach((button) => {
+    button.addEventListener('click', () => {
+      const productId = button.dataset.productId;
+      addToCart(productId);
+      updateCartQuantity();
     })
   });
 
