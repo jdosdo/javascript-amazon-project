@@ -1,4 +1,5 @@
 import {cart} from '../data/cart.js';
+import {products} from '../data/products.js'
 
 //First make a variable to saves all the products in the list. Make it an empty string first
 let productsHTML = '';
