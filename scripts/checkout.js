@@ -103,14 +103,15 @@ document.querySelectorAll('.js-delete-link')
       removeFromCart(productId);
 
       const container = document.querySelector(`.js-cart-item-container-${productId}`);
-      container.remove()
-      updateCartQuantity(cart);
+      container.remove();
+      updateCartQuantity();
     });
   });
 
-updateCartQuantity(cart);
 
-function updateCartQuantity(cart){
+updateCartQuantity();
+
+function updateCartQuantity(){
   let cartQuantity = 0;
 
   cart.forEach((cartItem) => {
