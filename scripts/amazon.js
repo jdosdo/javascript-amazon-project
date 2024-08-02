@@ -1,4 +1,4 @@
-import {cart, addToCart} from '../data/cart.js';
+import {cart, addToCart, calculateCartQuantity} from '../data/cart.js';
 /* another syntax for multiple import from the same file 
 import * as cartModule from '../data/cart.js';
 
@@ -40,7 +40,7 @@ products.forEach((product) => {
       </div>
 
       <div class="product-quantity-container">
-        <select>
+        <select class="js-quantity-selector-${product.id}">
           <option selected value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -56,7 +56,7 @@ products.forEach((product) => {
 
       <div class="product-spacer"></div>
 
-      <div class="added-to-cart">
+      <div class="js-added-to-cart-${product.id} added-to-cart">
         <img src="images/icons/checkmark.png">
         Added
       </div>
@@ -73,15 +73,11 @@ document.querySelector('.js-products-grid')
   .innerHTML = productsHTML;
 
 
-
 function updateCartQuantity(){
-  let cartQuantity = 0;
-      cart.forEach((cartItem) => {
-        cartQuantity += cartItem.quantity;
-      });
+  const cartQuantity = calculateCartQuantity();
 
-      document.querySelector('.js-cart-quantity')
-        .innerHTML = cartQuantity;
+  document.querySelector('.js-cart-quantity')
+    .innerHTML = cartQuantity;
 
       // console.log(cartQuantity);
       // console.log(cart);
@@ -89,10 +85,34 @@ function updateCartQuantity(){
 
 updateCartQuantity();
 
+//Objek kosong untuk menampung timeOutId yang unik untuk setiap button
+const timeOutIds = {};
+
 document.querySelectorAll('.js-add-to-cart')
   .forEach((button) => {
     button.addEventListener('click', () => {
       const productId = button.dataset.productId;
+      let timeOutKey = `timeOutId${productId}`
+      
+      document.querySelector(`.js-added-to-cart-${productId}`)
+        .classList.add('show-added-message');
+
+      // Hapus timeout sebelumnya jika ada
+      if(timeOutIds[timeOutKey]){
+        clearTimeout(timeOutIds[timeOutKey]); // Batalkan timeout sebelumnya
+      }
+
+       // Set timeout baru dan simpan ID timeout dalam objek timeOutIds
+
+       // ini artinya pada objek timeOutIds, ditambahkan key 'timeOutKey' dengan value hasil dari setTimeOut.
+      timeOutIds[timeOutKey] = setTimeout(() => { 
+        document.querySelector(`.js-added-to-cart-${productId}`)
+          .classList.remove('show-added-message');
+      
+      // Hapus entri dari objek setelah timeout selesai
+      delete timeOutIds[timeOutKey];
+      }, 1000);
+
       addToCart(productId);
       updateCartQuantity();
     })
