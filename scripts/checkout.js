@@ -125,15 +125,31 @@ function handleSave(productId){
   const quantityInput = document.querySelector(`.js-quantity-input-${productId}`).value;
   const newQuantity = Number(quantityInput);
 
-  updateQuantity(productId, newQuantity);
+  if(newQuantity > 0 && newQuantity < 1000){
+    updateQuantity(productId, newQuantity);
 
-  document.querySelector(`.js-quantity-label-${productId}`)
+    document.querySelector(`.js-quantity-label-${productId}`)
     .innerHTML = newQuantity;
 
-  updateCartQuantity();
-
-  document.querySelector(`.js-cart-item-container-${productId}`)
+    document.querySelector(`.js-cart-item-container-${productId}`)
     .classList.remove('is-editing-quantity');
+  }
+  else if(newQuantity === 0){
+    removeFromCart(productId);
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    /* while based on this code variable container will always
+    get the value of js-cart-item-container-${productId}, it is always best practice to 
+    check if the container is there (truthy value), hence the 'if' below */
+    if(container){ 
+      container.remove();
+    }
+    updateCartQuantity();
+  }
+  else{
+    alert('Please input valid value');
+    return;
+  }
+  updateCartQuantity();
 }
 
 document.querySelectorAll('.js-save-link')
