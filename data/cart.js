@@ -19,7 +19,6 @@ function saveToStorage(){
 export function addToCart(productId){
   let matchingItem;
   let selectedValue = document.querySelector(`.js-quantity-selector-${productId}`).value;
-  console.log(selectedValue);
 
   cart.forEach((cartItem) => {
     // Check if the added product is already exist in a cart. we check item.productName because in
@@ -77,3 +76,16 @@ export function updateQuantity(productId, newQuantity){
   matchingItem.quantity = newQuantity;
   saveToStorage();
 };
+
+export function updateDeliveryOption(productId, deliveryOptionId) {
+  let matchingItem;
+
+  cart.forEach((cartItem) => {
+    if(productId === cartItem.productId){
+      matchingItem = cartItem; 
+    };
+  });
+
+  matchingItem.deliveryOptionId = deliveryOptionId;
+  saveToStorage();
+}
