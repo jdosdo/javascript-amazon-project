@@ -1,10 +1,10 @@
 import { cart, removeFromCart, calculateCartQuantity, updateQuantity, updateDeliveryOption } from '../../data/cart.js';
-import { products, getProduct } from '../../data/products.js';
+import { getProduct } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
-import { hello } from 'https://unpkg.com/supersimpledev@1.0.1/hello.esm.js'
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'
-import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOptions.js'
+import { deliveryOptions, getDeliveryOption, calculateDeliveryDate } from '../../data/deliveryOptions.js'
 import { renderPaymentSummary } from './paymentSummary.js';
+import { renderCheckoutHeader } from './checkoutHeader.js';
 
 export function renderOrderSummary(){
   let cartSumarryHTML = '';
@@ -18,12 +18,7 @@ export function renderOrderSummary(){
 
     const deliveryOption = getDeliveryOption(deliveryOptionId);
 
-    const today = dayjs();
-    const deliveryDate = today.add(
-      deliveryOption.deliveryDays,
-      'days'
-    );
-    const dateString = deliveryDate.format('dddd, MMMM D') // check dayjs documentation for .format() syntax
+    const dateString = calculateDeliveryDate(deliveryOption);
 
     cartSumarryHTML += 
     `
@@ -73,12 +68,8 @@ export function renderOrderSummary(){
     let html = ''
 
     deliveryOptions.forEach((deliveryOption) => {
-      const today = dayjs();
-      const deliveryDate = today.add(
-        deliveryOption.deliveryDays,
-        'days'
-      );
-      const dateString = deliveryDate.format('dddd, MMMM D') // check dayjs documentation for .format() syntax
+      
+      const dateString = calculateDeliveryDate(deliveryOption);
 
       const priceString = deliveryOption.priceCents === 0
         ? 'FREE'
@@ -114,10 +105,18 @@ export function renderOrderSummary(){
         const productId = link.dataset.productId
         removeFromCart(productId);
 
+        /*
+        after item from cart removed, earlier in this course we use DOM to refresh the orderSummary
+        after the item removed from cart (code below), now we just refresh the cart by regenerating
+        the html by calling the function 'renderOrderSummary()'  
+
         const container = document.querySelector(`.js-cart-item-container-${productId}`);
         container.remove();
+        */
+
+        renderCheckoutHeader();
+        renderOrderSummary();
         renderPaymentSummary();
-        updateCartQuantity();
       });
     });
 
@@ -146,20 +145,25 @@ export function renderOrderSummary(){
     }
     else if(newQuantity === 0){
       removeFromCart(productId);
-      const container = document.querySelector(`.js-cart-item-container-${productId}`);
-      /* while based on this code variable container will always
-      get the value of js-cart-item-container-${productId}, it is always best practice to 
-      check if the container is there (truthy value), hence the 'if' below */
-      if(container){ 
-        container.remove();
-      }
-      updateCartQuantity();
+      /* later in the course, it is better to just regenerate the html by calling again 
+      the function that renders the html 
+        const container = document.querySelector(`.js-cart-item-container-${productId}`);
+        (while based on this code variable container will always
+        get the value of js-cart-item-container-${productId}, it is always best practice to 
+        check if the container is there (truthy value), hence the 'if' below) 
+
+        if(container){ 
+          container.remove();
+        } 
+      */
     }
     else{
       alert('Please input valid value');
       return;
     }
-    updateCartQuantity();
+    renderCheckoutHeader();
+    renderOrderSummary();
+    renderPaymentSummary();
   }
 
   document.querySelectorAll('.js-save-link')
@@ -177,15 +181,6 @@ export function renderOrderSummary(){
         }
       });
     });
-
-  updateCartQuantity();
-
-  function updateCartQuantity(){
-    const cartQuantity = calculateCartQuantity()
-
-    document.querySelector('.js-return-to-home-link')
-      .innerHTML = `${cartQuantity} items`;
-  } 
 
   document.querySelectorAll('.js-delivery-option')
     .forEach((element) => {
