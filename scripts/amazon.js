@@ -95,6 +95,7 @@ document.querySelectorAll('.js-add-to-cart')
   .forEach((button) => {
     button.addEventListener('click', () => {
       const productId = button.dataset.productId;
+      const selectedValue = document.querySelector(`.js-quantity-selector-${productId}`.value); // this is string
       let timeOutKey = `timeOutId${productId}`
       
       document.querySelector(`.js-added-to-cart-${productId}`)
@@ -116,7 +117,7 @@ document.querySelectorAll('.js-add-to-cart')
       delete timeOutIds[timeOutKey];
       }, 1000);
 
-      addToCart(productId);
+      addToCart(productId, Number(selectedValue));
       updateCartQuantity();
     })
   });
