@@ -1,5 +1,5 @@
 import { renderOrderSummary } from '../../scripts/checkout/orderSummary.js';
-import { cart, loadFromStorage } from '../../data/cart.js'
+import { cart, loadFromStorage } from '../../data/cart.js';
 
 describe('test suite: renderOrderSummary', () => {
   const productId1 = 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6';
@@ -58,11 +58,25 @@ describe('test suite: renderOrderSummary', () => {
       document.querySelector(`.js-product-quantity-${productId2}`).innerText
     ).toContain('Quantity: 1');
 
+    expect(
+      document.querySelector(`.js-product-name-${productId1}`).innerText
+    ).toContain('Black and Gray Athletic Cotton Socks - 6 Pairs');
+
+    expect(
+      document.querySelector(`.js-product-name-${productId2}`).innerText
+    ).toContain('Intermediate Size Basketball');
+
+    expect(
+      document.querySelector(`.js-product-price-${productId1}`).innerText
+    ).toContain('$10.90');
+
+    expect(
+      document.querySelector(`.js-product-price-${productId2}`).innerText
+    ).toContain('$20.95');
+
   });
 
   it('removes a product', () => {
-    
-
     // to check if the delete is working by checking if js-cart-item-container only has
     // 1 item remaining (before 2, but now only 1)
     document.querySelector(`.js-delete-link-${productId1}`).click();
@@ -83,6 +97,10 @@ describe('test suite: renderOrderSummary', () => {
     expect(
       document.querySelector(`.js-cart-item-container-${productId2}`)
     ).not.toEqual(null)
+
+    expect(
+      document.querySelector(`.js-product-name-${productId2}`).innerText
+    ).toContain('Intermediate Size Basketball');
 
     // This is to check after deleting product1, the cart is also updated not just the page
     // before cart has 2 products, now after deleting product1, cart.lenght should equal to 1
