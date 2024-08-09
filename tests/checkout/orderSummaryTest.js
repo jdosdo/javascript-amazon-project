@@ -34,6 +34,13 @@ describe('test suite: renderOrderSummary', () => {
     loadFromStorage();
 
     renderOrderSummary();
+  });
+
+  afterEach(() => { // EXERCISE 16F
+    //code below is to remove the generated HTML, just so we can see the test result more clearly
+    //recommended to clear the generated html after every test
+    //try commenting code below
+    document.querySelector('.js-test-container').innerHTML = ``;
   })
 
   it('displays the cart', () => {
@@ -51,10 +58,6 @@ describe('test suite: renderOrderSummary', () => {
       document.querySelector(`.js-product-quantity-${productId2}`).innerText
     ).toContain('Quantity: 1');
 
-    //code below is to remove the generated HTML, just so we can see the test result more clearly
-    //recommended to clear the generated html after every test
-    //try commenting code below
-    document.querySelector('.js-test-container').innerHTML = ``;
   });
 
   it('removes a product', () => {
@@ -87,11 +90,6 @@ describe('test suite: renderOrderSummary', () => {
 
     // in the test before, we delete product1, so product2 should be in the first array of cart
     expect(cart[0].productId).toEqual(productId2);
-
-    //code below is to remove the generated HTML, just so we can see the test result more clearly
-    //recommended to clear the generated html after every test
-    //try commenting code below
-    document.querySelector('.js-test-container').innerHTML = ``;
   })
 });
 

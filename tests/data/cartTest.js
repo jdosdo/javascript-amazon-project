@@ -3,7 +3,7 @@ import { cart, addToCart, loadFromStorage } from '../../data/cart.js'
 describe('test suite: addToCart', () => {
   beforeEach(() => {
     spyOn(localStorage, 'setItem');
-  });
+  }); //THIS IS EXERCISE 16E
 
   it('adds an existing product to the cart', () => {
     spyOn(localStorage, 'getItem').and.callFake(() => {
