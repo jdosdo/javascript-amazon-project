@@ -84,6 +84,11 @@ export function updateQuantity(productId, newQuantity){
 
 export function updateDeliveryOption(productId, deliveryOptionId) {
   let matchingItem;
+  let checkDeliveryOptionId = Number(deliveryOptionId)
+
+  if(checkDeliveryOptionId < 1 || checkDeliveryOptionId > 3){
+    return;
+  }
 
   cart.forEach((cartItem) => {
     if(productId === cartItem.productId){

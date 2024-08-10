@@ -187,5 +187,22 @@ describe('test suite: updateDeliveryOption', () => {
     // check if localStorage.setItem is never been called (since we make a check)
     // on updateDeliveryOption to return nothing if we input non-existent productId
     expect(localStorage.setItem).toHaveBeenCalledTimes(0);
+  });
+
+  it('wont do anything if deliveryOptionId inputed doesnt exist', () => {
+    updateDeliveryOption(productId1, '5');
+
+    // check if cart length remains the same
+    expect(cart.length).toEqual(2);
+
+    // check if there is no changes on the product1 details
+    expect(cart[0].productId).toEqual(productId1);
+    expect(cart[0].quantity).toEqual(2);
+
+    // since we give 5 as deliveryOption, check if deliveryOptionId is changed
+    expect(cart[0].deliveryOptionId).not.toEqual('5')
+    expect(cart[0].deliveryOptionId).toEqual('1');
+
+    expect(localStorage.setItem).toHaveBeenCalledTimes(0);
   })
 });
