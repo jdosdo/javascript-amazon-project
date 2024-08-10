@@ -82,7 +82,6 @@ describe('test suite: renderOrderSummary', () => {
     document.querySelector(`.js-delete-link-${productId1}`).click();
     expect(
       // this querySelectorAll gives an array of element.
-      // since we will have 2 'js-cart-item-container'. we can use .length
       document.querySelectorAll('.js-cart-item-container').length
     ).toEqual(1);
 
@@ -108,8 +107,37 @@ describe('test suite: renderOrderSummary', () => {
 
     // in the test before, we delete product1, so product2 should be in the first array of cart
     expect(cart[0].productId).toEqual(productId2);
+  });
+
+  it('updates delivery option', () => {
+    // check by clicking the 3rd delivery option 
+    document.querySelector(`.js-delivery-option-input-${productId1}-3`).click();
+    expect(
+      document.querySelector(`.js-delivery-option-input-${productId1}-3`).checked
+    ).toEqual(true);
+
+    // check if the cart length is still correct
+    expect(cart.length).toEqual(2);
+
+    // check if the first product is still product1
+    expect(cart[0].productId).toEqual(productId1);
+
+    // check if product1 delivery option is updated from 1st option to 3rd option
+    expect(cart[0].deliveryOptionId).toEqual('3');
+
+    // check if shipping price and total price changes correctly
+    expect(
+      document.querySelector('.js-total-shipping-cost').innerText
+    ).toEqual('$14.98');
+
+    expect(
+      document.querySelector('.js-total-order-cost').innerText
+    ).toEqual('$63.50');
   })
 });
+
+
+
 
 /*
 In Jasmine, expect has a property 'not', it basically works like '!'
