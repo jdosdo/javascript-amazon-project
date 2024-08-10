@@ -1,4 +1,4 @@
-import { cart, addToCart, loadFromStorage, removeFromCart } from '../../data/cart.js'
+import { cart, addToCart, loadFromStorage, removeFromCart, updateDeliveryOption } from '../../data/cart.js'
 
 describe('test suite: addToCart', () => {
   beforeEach(() => {
@@ -111,13 +111,57 @@ describe('test suite: removeFromCart', () => {
     //check if localStorage.setItem still has correct values
     expect(localStorage.setItem).toHaveBeenCalledWith('cart', JSON.stringify([{
       productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
-        quantity: 1,
-        deliveryOptionId: '1'
+      quantity: 1,
+      deliveryOptionId: '1'
       }, {
-        productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
-        quantity: 2,
-        deliveryOptionId: '1'
+      productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
+      quantity: 2,
+      deliveryOptionId: '1'
     }]))
   });
+});
+
+describe('test suite: updateDeliveryOption', () => {
+  const productId1 = 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6';
+  const productId2 = '15b6fc6f-327a-4ec4-896f-486349e85a3d';
+
+  beforeEach(() => {
+    spyOn(localStorage, 'setItem');
+    spyOn(localStorage, 'getItem').and.callFake(() => {
+      return JSON.stringify([{
+        productId: productId1,
+        quantity: 2,
+        deliveryOptionId: '1'
+        }, {
+        productId: productId2,
+        quantity: 1,
+        deliveryOptionId: '2'
+      }]);
+    });
   
-})
+    loadFromStorage();
+  })
+
+  it('updates the delivery option of a product in a cart', () => {
+    //changes deliveryOptionId of product1 from '1' to '3'
+    updateDeliveryOption(productId1, '3');
+
+    // check if deliveryOptionId of product1 is changed to '3'
+    expect(cart[0].deliveryOptionId).toEqual('3');
+
+    // check if localStorage.setItem is called 1 time
+    expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+
+    // check if the cart looks okay (in this case exactly like on spy but
+    // deliveryOptionId of product1 should be '3' instead of '1');
+    expect(localStorage.setItem).toHaveBeenCalledWith('cart', JSON.stringify([{
+      productId: productId1,
+      quantity: 2,
+      deliveryOptionId: '3'
+      }, {
+      productId: productId2,
+      quantity: 1,
+      deliveryOptionId: '2'
+    }]))
+  })
+});
