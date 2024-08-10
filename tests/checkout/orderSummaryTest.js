@@ -111,7 +111,8 @@ describe('test suite: renderOrderSummary', () => {
 
   it('updates delivery option', () => {
     // check by clicking the 3rd delivery option 
-    document.querySelector(`.js-delivery-option-input-${productId1}-3`).click();
+    document.querySelector(`.js-delivery-option-${productId1}-3`).click();
+    
     expect(
       document.querySelector(`.js-delivery-option-input-${productId1}-3`).checked
     ).toEqual(true);

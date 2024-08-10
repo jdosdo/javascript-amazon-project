@@ -90,7 +90,14 @@ export function updateDeliveryOption(productId, deliveryOptionId) {
       matchingItem = cartItem; 
     }
   });
-
+  
+  // check if the productId inputed to this function exists in the cart
+  // if doesnt exists then immediately end the function
+  if(!matchingItem){
+    return;
+  };
+  
   matchingItem.deliveryOptionId = deliveryOptionId;
   saveToStorage();
 }
+// }
