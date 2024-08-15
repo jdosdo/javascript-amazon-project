@@ -1,4 +1,4 @@
-import {cart, addToCart, calculateCartQuantity} from '../data/cart.js';
+import {addToCart, calculateCartQuantity} from '../data/cart.js';
 /* another syntax for multiple import from the same file 
 import * as cartModule from '../data/cart.js';
 
@@ -6,7 +6,6 @@ cartModule.cart
 cartModule.addToCart('id')
 */
 import {products} from '../data/products.js'
-import { formatCurrency } from './utils/money.js';
 
 //First make a variable to saves all the products in the list. Make it an empty string first
 let productsHTML = '';

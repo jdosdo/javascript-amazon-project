@@ -116,7 +116,7 @@ class Cart {
 }
 
 // these 2, an object created from Class, is called instance
-export const cart = new Cart('cart-oop');
+const cart = new Cart('cart-oop');
 const businessCart = new Cart('cart-business');
 
 console.log(cart);
