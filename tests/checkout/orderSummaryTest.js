@@ -1,5 +1,6 @@
 import { renderOrderSummary } from '../../scripts/checkout/orderSummary.js';
-import { cart, loadFromStorage } from '../../data/cart.js';
+import { cart, loadFromStorage, } from '../../data/cart.js';
+import { loadProducts } from '../../data/products.js';
 
 describe('test suite: renderOrderSummary', () => {
   const productId1 = 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6';
@@ -8,6 +9,12 @@ describe('test suite: renderOrderSummary', () => {
   // It is called 'Hook', a special function in Jasmine. Here we use hooks 'beforeEach'
   // This hook basically means we will run this beforeEach function first, and use this 
   // function on each 'it' block test. Basically to remove repeatable code so the code looks cleaner
+
+  beforeAll((done) => {
+    loadProducts(() => {
+      done();
+    });
+  })
 
   beforeEach(() => {
     //IT IS RECOMMENDED TO MOCK BOTH 'setItem' and 'getItem' to prevent localStorage data gets affected by the testing
